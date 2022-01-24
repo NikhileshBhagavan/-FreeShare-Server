@@ -7,6 +7,7 @@ mongoose.connect("mongodb://localhost:27017/freeShareDB");
 const userschema = new mongoose.Schema({
     username: String,
     password: String,
+
 });
 const bookschema = new mongoose.Schema({
     uuid: String,
@@ -27,8 +28,14 @@ const initialreportschema = new mongoose.Schema({
 })
 const reportschema = new mongoose.Schema({
     report_book_id: String,
+    report_book_title: String,
+    report_book_subdepartment: String,
+    report_book_department: String,
+    report_book_url: String,
+
     reports: [{ subject: String, message: String }],
     reported_emails: [String],
+    reports_count: Number,
 });
 //userschema.plugin(passportlocalmongoose); //automatically do hash+salt our passwords
 

@@ -37,6 +37,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 const multer = require('multer');
+const { model } = require('mongoose');
 var storage = multer.diskStorage({
     destination: function(req, file, cb) {
         console.log(file);
@@ -207,6 +208,7 @@ app.post("/report", function(req, res) {
                             if (report !== null) {
                                 report.reports.push({ subject: req.body.report_subject, message: req.body.report_message });
                                 report.reported_emails.push(req.body.report_email);
+                                report.reports_count = report.reports_count + 1;
                                 report.save(function(err) {
                                     if (err) {
                                         res.json({ message: "Error , Try Submitting Again After some time..." });
@@ -216,17 +218,28 @@ app.post("/report", function(req, res) {
                                 });
 
                             } else {
-                                const obj = new models.Report({
-                                    report_book_id: req.body.report_book_id,
-                                    reports: [{ subject: req.body.report_subject, message: req.body.report_message }],
-                                    reported_emails: [req.body.report_email],
-
-                                });
-                                obj.save(function(err) {
+                                models.Book.findOne({ uuid: req.body.report_book_id }, function(err, docs) {
                                     if (err) {
                                         res.json({ message: "Error , Try Submitting Again After some time..." });
                                     } else {
-                                        res.json({ message: "success" });
+                                        const obj = new models.Report({
+                                            report_book_id: req.body.report_book_id,
+                                            report_book_title: docs.title,
+                                            report_book_subdepartment: docs.subdepartment,
+                                            report_book_department: docs.department,
+                                            report_book_url: docs.book_url,
+                                            reports: [{ subject: req.body.report_subject, message: req.body.report_message }],
+                                            reported_emails: [req.body.report_email],
+                                            reports_count: 1
+
+                                        });
+                                        obj.save(function(err) {
+                                            if (err) {
+                                                res.json({ message: "Error , Try Submitting Again After some time..." });
+                                            } else {
+                                                res.json({ message: "success" });
+                                            }
+                                        });
                                     }
                                 });
                             }
@@ -264,10 +277,34 @@ app.post("/admin", function(req, res) {
 });
 app.get("/adminhomepage", function(req, res) {
     if (req.isAuthenticated()) {
+        models.Report.find({}, function(err, docs) {
+            if (err) {
+                res.render("notfound");
+            } else {
+                function comparecount(a, b) {
 
-        res.send("<a href='/adminlogout'>Logout</a>");
+
+
+                    let comparison = 0;
+
+                    if (a.reports_count < b.reports_count) {
+                        comparison = 1;
+                    } else if (a.reports_count > b.reports_count) {
+                        comparison = -1;
+                    }
+                    return comparison;
+                }
+                let arr = docs.sort(comparecount)
+                console.log(arr);
+
+
+                res.render("adminhomepage", { obj: arr });
+            }
+        })
+
+
     } else {
-        res.send("failure");
+        res.render("nonauthenticated");
     }
 });
 app.get("/adminlogout", function(req, res) {
@@ -278,6 +315,48 @@ app.get("/adminlogout", function(req, res) {
     });
 
 });
+app.post("/admin/report", function(req, res) {
+    console.log(req.body);
+
+    models.Report.findOne({ report_book_id: req.body.book_id }, function(error, rep) {
+        if (error) {
+            res.json({ message: "error" });
+        } else {
+            let list = [];
+            for (let i = 0; i < rep.reported_emails.length; i++) {
+                list.push(rep.reported_emails[i]);
+            }
+            let bookname = rep.report_book_title;
+            models.Report.deleteOne({ report_book_id: req.body.book_id }, function(err) {
+                if (err) {
+                    res.json({ message: "error" });
+                } else {
+                    var transporter = nodemailer.createTransport({
+                        service: 'gmail',
+                        auth: {
+                            user: process.env.EMAIL,
+                            pass: process.env.PASSWORD
+                        }
+                    });
+                    var mailOptions = {
+                        from: process.env.EMAIL,
+                        to: list,
+                        subject: bookname + " Report Update",
+                        text: req.body.feedback
+                    };
+                    transporter.sendMail(mailOptions, function(e, info) {
+                        res.json({ message: "success" });
+                    });
+
+                }
+            });
+        }
+    });
+
+
+});
+
+
 app.get("/*", function(req, res) {
     res.render("index.ejs", { user: "hi" });
 });

@@ -70,6 +70,10 @@ body {
     box-shadow: inset 8px 8px 8px #cbced1, inset -8px -8px 8px #fff
 }
 
+.form-field.psw {
+    margin-bottom: 5px;
+}
+
 .wrapper .form-field .fas {
     color: #555
 }

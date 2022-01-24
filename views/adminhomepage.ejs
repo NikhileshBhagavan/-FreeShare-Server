@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Book_Reports </title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+
+
+    <style>
+        body {
+            min-height: 100vh;
+            background-color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="position:fixed;z-index:10;top:10px;right:20px;"><a href="/adminlogout">Logout</a></div>
+    <div class="ui segment" style="margin:20px;margin-top:40px;">
+        <h3>&nbsp;Reported Books</h3>
+        <div class="ui  modal btn1">
+            <div class="header disp">Book Id : </div>
+            <div class="content">
+                <div class="ui message default">
+                    <div class="ui accordion">
+                        <div class="active title">
+                            <i class="dropdown icon"></i><b>Approve Report Default FeedBack (Editable): </b>
+                        </div>
+                        <div class="active content">
+                            <div class="ui segment app" contenteditable="true">
+                                <span>The book have been deleted due to inappropriate Content</span>
+                            </div>
+                        </div>
+                        <div class="title">
+                            <i class="dropdown icon"></i><b>Reject Report Default FeedBack (Editable) : </b>
+                        </div>
+                        <div class="content">
+                            <div class="ui segment rej" contenteditable="true">
+                                <span>The book have been successfully checked and we never found anything unusual</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+            </div>
+
+
+            <div class="actions">
+                <div class="ui red approve button">Approve Report</div>
+
+                <div class="ui green cancel button">Reject Report</div>
+            </div>
+        </div>
+
+        <div class="ui accordion">
+            <% for(let i=0;i<obj.length;i++){ %>
+
+                <div class="ui segment <%=obj[i].report_book_id%>" style="position:relative;word-wrap:break-word;margin-top:5px;margin-bottom:5px;border-radius:0px;">
+
+                    <div class=" title">
+                        <div style="width:82.5%">
+                            <i class="dropdown icon"></i> <b><%=obj[i].report_book_title%> </b>&nbsp;&nbsp;&nbsp;
+                        </div>
+                        <div style="border-radius: 50%;position:absolute;right:10px;top:13px;" class=" ui blue icon button " data-tooltip="No of Reports " data-inverted=" ">
+                            <%=obj[i].reports_count%>
+                        </div>
+                    </div>
+
+                    <div class="content ">
+                        <div class="ui  message">
+                            <b>Id : </b>
+                            <%=obj[i].report_book_id%><br>
+                                <b>Title : </b>
+                                <%=obj[i].report_book_title%> <br/>
+                                    <b>Sub Department : </b>
+                                    <%=obj[i].report_book_subdepartment%><br/>
+                                        <b>Department : </b>
+                                        <%=obj[i].report_book_department%><br>
+                                            <b> Report Count : </b>
+                                            <%=obj[i].reports_count%> <br/>
+                                                <b> View this book : </b> <a style="color:rgba(0,0,0,.87);" target="_blank" href="<%=obj[i].report_book_url%>"><i class="eye icon"></i></a>
+                        </div>
+                        <div class="ui message">
+                            <div class="accordion" style="margin:0px;">
+                                <div class="title"> <i class="dropdown icon"></i><b>Reports</b></div>
+                                <div class="content">
+                                    <div class=" accordion " style="margin:0px;">
+                                        <%for(let j=0;j<obj[i].reports.length;j++){%>
+                                            <div class="title"><i class="dropdown icon"></i><b><%=obj[i].reports[j].subject%></b></div>
+
+                                            <div class="content">
+                                                <div class="ui segment" style="margin:0px;">
+                                                    <%=obj[i].reports[j].message%>
+                                                </div>
+                                            </div>
+                                            <% }%>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="ui button btn" id="<%=obj[i].report_book_id%>" style="width:100%;">
+                            RESOLVE ISSUE
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+                <%}%>
+
+
+        </div>
+    </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.ui.accordion').accordion();
+            let a = document.querySelectorAll(".ui.button.btn");
+            for (let i = 0; i < a.length; i++) {
+                a[i].addEventListener("click", function(e) {
+                    document.querySelector(".disp").innerHTML = "Book Id : " + e.target.id;
+                    $('.ui.modal').modal(
+
+                        {
+                            onApprove: function() {
+                                alert("Updating ...");
+
+                                axios.post(
+                                        "http://localhost:8000/admin/report", {
+                                            book_id: document.querySelector(".disp").innerText.substring(10),
+                                            feedback: document.querySelector(".app span").innerText,
+                                            status: "reportapproved",
+                                        }
+                                    )
+                                    .then(res => {
+                                        if (res.data.message === "success") {
+                                            document.querySelector(".ui.segment." + document.querySelector(".disp").innerText.substring(10)).style.display = "none";
+
+
+
+                                            document.querySelector(".app").innerHTML = "<span>The book have been deleted due to inappropriate Content</span>";
+                                            document.querySelector(".rej").innerHTML = "<span>The book have been successfully checked and we never found anything unusual</span>";
+                                            $('.ui.modal').modal("hide");
+                                            alert("book deleted successfully")
+                                        } else {
+                                            alert("Error Try Again 1");
+
+                                        }
+                                    }).catch((err) => {
+                                        alert(err);
+                                        alert("Error Try Again 2");
+
+                                    });
+                                return false;
+
+                            },
+                            onDeny: function() {
+                                alert("Updating ...");
+                                axios.post(
+
+                                        "http://localhost:8000/admin/report", {
+                                            book_id: document.querySelector(".disp").innerText.substring(10),
+                                            feedback: document.querySelector(".rej span").innerText,
+                                            status: "reportrejected",
+                                        }
+
+                                    ).then(res => {
+                                        if (res.data.message === "success") {
+                                            document.querySelector(".ui.segment." + document.querySelector(".disp").innerText.substring(10)).style.display = "none";
+
+
+                                            document.querySelector(".app").innerHTML = "<span>The book have been deleted due to inappropriate Content</span>";
+                                            document.querySelector(".rej").innerHTML = "<span>The book have been successfully checked and we never found anything unusual</span>";
+                                            $('.ui.modal').modal("hide");
+                                            alert("book report rejected successfully")
+                                        } else {
+                                            alert("Error Try Again 1");
+
+                                        }
+
+                                    })
+                                    .catch(err => {
+                                        alert("Error Try Again 2");
+
+                                    });
+                                return false;
+
+                            }
+                        });
+                    $('.ui.modal')
+                        .modal('show');;
+                })
+            }
+
+        });
+    </script>
+</body>
+
+</html>
