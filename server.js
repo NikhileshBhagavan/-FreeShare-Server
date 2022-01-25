@@ -336,8 +336,7 @@ app.post("/admin/report", function(req, res) {
                         try {
                             require('fs').unlinkSync(path.join(__dirname, bookpath + '.pdf'));
                         } catch (err) {
-                            res.json({ message: "error" });
-                            return;
+							console.log(err);
                         }
 
                         models.Report.deleteOne({ report_book_id: req.body.book_id }, function(err) {
