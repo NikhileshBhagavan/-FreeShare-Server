@@ -86,12 +86,17 @@
                                 <b>Title : </b>
                                 <%=obj[i].report_book_title%> <br/>
                                     <b>Sub Department : </b>
-                                    <%=obj[i].report_book_subdepartment%><br/>
-                                        <b>Department : </b>
-                                        <%=obj[i].report_book_department%><br>
-                                            <b> Report Count : </b>
-                                            <%=obj[i].reports_count%> <br/>
-                                                <b> View this book : </b> <a style="color:rgba(0,0,0,.87);" target="_blank" href="<%=obj[i].report_book_url%>"><i class="eye icon"></i></a>
+                                    <%if(obj[i].report_book_subdepartment===""){%>
+                                        <%=obj[i].report_book_department%>
+                                            <%  }else{%>
+                                                <%=obj[i].report_book_subdepartment%>
+                                                    <%}%>
+                                                        <br/>
+                                                        <b>Department : </b>
+                                                        <%=obj[i].report_book_department%><br>
+                                                            <b> Report Count : </b>
+                                                            <%=obj[i].reports_count%> <br/>
+                                                                <b> View this book : </b> <a style="color:rgba(0,0,0,.87);" target="_blank" href="<%=obj[i].report_book_url%>"><i class="eye icon"></i></a>
                         </div>
                         <div class="ui message">
                             <div class="accordion" style="margin:0px;">
@@ -200,6 +205,7 @@
 
                                     })
                                     .catch(err => {
+                                        alert(err);
                                         alert("Error Try Again 2");
 
                                     });

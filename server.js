@@ -396,7 +396,7 @@ app.post("/admin/report", function(req, res) {
 
 
 app.get("/*", function(req, res) {
-    res.render("index.ejs", { user: "hi" });
+    res.render("index.ejs");
 });
 app.listen(8000, () => {
     console.log("listening to port 8000");
