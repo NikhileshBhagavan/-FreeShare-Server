@@ -11,7 +11,7 @@ body {
 
 .home {
     margin-top: 60px;
-    background-image: url("./finalbgimage.jpg");
+    background-image: url("/finalbgimage.jpg");
     height: 100vh;
     background-position: center;
     background-repeat: no-repeat;
@@ -230,6 +230,10 @@ input[type=checkbox] {
     margin-right: 0px;
 }
 
+.ui.animated.button {
+    padding-left: 0px;
+}
+
 .nothing {
     margin-top: 30px;
     width: 50%;
@@ -241,10 +245,6 @@ input[type=checkbox] {
     padding-top: 15px;
     padding-bottom: 15px;
     margin-left: 10.5px;
-}
-
-.ui.animated.button {
-    padding-left: 0px;
 }
 
 .book {

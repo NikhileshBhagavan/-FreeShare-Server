@@ -36,7 +36,7 @@
                         </div>
                         <div class="active content">
                             <div class="ui segment app" contenteditable="true">
-                                <span>The book have been deleted due to inappropriate Content</span>
+                                <span>The book mentioned in the Subject of Email have been reported by you recently. It is found to have Unrelated/Plagiarized Content and therefore it is decided to Remove Book from the System</span>
                             </div>
                         </div>
                         <div class="active title">
@@ -44,7 +44,7 @@
                         </div>
                         <div class="content active">
                             <div class="ui segment rej" contenteditable="true">
-                                <span>The book have been successfully checked and we never found anything unusual</span>
+                                <span>The book mentioned in the Subject of Email have been reported by you recently. The Book was checked By Specialists and they haven't find anything Unusual</span>
                             </div>
                         </div>
                     </div>
@@ -68,7 +68,7 @@
         <div class="ui accordion">
             <% for(let i=0;i<obj.length;i++){ %>
 
-                <div class="ui segment <%=obj[i].report_book_id%>" style="position:relative;word-wrap:break-word;margin-top:5px;margin-bottom:5px;border-radius:0px;">
+                <div class="ui segment <%=obj[i].report_book_id.substring(0,7) %>" style="position:relative;word-wrap:break-word;margin-top:5px;margin-bottom:5px;border-radius:0px;">
 
                     <div class=" title">
                         <div style="width:82.5%">
@@ -159,21 +159,21 @@
                                     )
                                     .then(res => {
                                         if (res.data.message === "success") {
-                                            document.querySelector(".ui.segment." + document.querySelector(".disp").innerText.substring(10)).style.display = "none";
+                                            document.querySelector(".ui.segment." + document.querySelector(".disp").innerText.substring(10, 17)).style.display = "none";
 
 
 
-                                            document.querySelector(".app").innerHTML = "<span>The book have been deleted due to inappropriate Content</span>";
-                                            document.querySelector(".rej").innerHTML = "<span>The book have been successfully checked and we never found anything unusual</span>";
+                                            document.querySelector(".app").innerHTML = "<span>The book mentioned in the Subject of Email have been reported by you recently. It is found to have Unrelated/Plagiarized Content and therefore it is decided to Remove Book from the System</span>";
+                                            document.querySelector(".rej").innerHTML = "The book mentioned in the Subject of Email have been reported by you recently. The Book was checked By Specialists and they haven't find anything Unusual</span>";
                                             $('.ui.modal').modal("hide");
-                                            alert("book deleted successfully")
+                                            alert("Book Deleted successfully")
                                         } else {
-                                            alert("Error Try Again 1");
+                                            alert("Error Try Again");
 
                                         }
                                     }).catch((err) => {
                                         alert(err);
-                                        alert("Error Try Again 2");
+                                        alert("Error Try Again");
 
                                     });
                                 return false;
@@ -191,22 +191,22 @@
 
                                     ).then(res => {
                                         if (res.data.message === "success") {
-                                            document.querySelector(".ui.segment." + document.querySelector(".disp").innerText.substring(10)).style.display = "none";
+                                            document.querySelector(".ui.segment." + document.querySelector(".disp").innerText.substring(10, 17)).style.display = "none";
 
 
-                                            document.querySelector(".app").innerHTML = "<span>The book have been deleted due to inappropriate Content</span>";
-                                            document.querySelector(".rej").innerHTML = "<span>The book have been successfully checked and we never found anything unusual</span>";
+                                            document.querySelector(".app").innerHTML = "<span>The book mentioned in the Subject of Email have been reported by you recently. It is found to have Unrelated/Plagiarized Content and therefore it is decided to Remove Book from the System</span>";
+                                            document.querySelector(".rej").innerHTML = "<span>The book mentioned in the Subject of Email have been reported by you recently. The Book was checked By Specialists and they haven't find anything Unusual</span>";
                                             $('.ui.modal').modal("hide");
-                                            alert("book report rejected successfully")
+                                            alert("Book Report Rejected successfully")
                                         } else {
-                                            alert("Error Try Again 1");
+                                            alert("Error Try Again");
 
                                         }
 
                                     })
                                     .catch(err => {
                                         alert(err);
-                                        alert("Error Try Again 2");
+                                        alert("Error Try Again");
 
                                     });
                                 return false;

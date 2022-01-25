@@ -102,10 +102,3 @@ body {
 .wrapper a:hover {
     color: #039BE5
 }
-
-@media(max-width: 380px) {
-    .wrapper {
-        margin: 30px 20px;
-        padding: 40px 15px 15px 15px
-    }
-}

@@ -349,7 +349,7 @@ app.post("/admin/report", function(req, res) {
                                 var mailOptions = {
                                     from: process.env.EMAIL,
                                     to: list,
-                                    subject: bookname + " Report Update",
+                                    subject: "📚FreeShare - " + bookname + " Report Update",
                                     text: req.body.feedback
                                 };
                                 transporter.sendMail(mailOptions, function(e, info) {
@@ -375,7 +375,7 @@ app.post("/admin/report", function(req, res) {
                         var mailOptions = {
                             from: process.env.EMAIL,
                             to: list,
-                            subject: bookname + " Report Update",
+                            subject: "📚FreeShare - " + bookname + " Report Update",
                             text: req.body.feedback
                         };
                         transporter.sendMail(mailOptions, function(e, info) {
