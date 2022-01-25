@@ -88,7 +88,7 @@ app.post("/api/bookupload", upload.fields([{ name: 'book_img', maxCount: 1 }, { 
 
     }
     const book = new models.Book({
-        uuid: uuidv4(),
+        uuid: 'b' + uuidv4(),
         title: req.body.title,
         department: req.body.department,
         isdepartmentothers: req.body.isdepartmentothers == "true",
@@ -333,7 +333,12 @@ app.post("/admin/report", function(req, res) {
                     if (err) {
                         res.json({ message: "error" });
                     } else {
-                        require('fs').unlinkSync(path.join(__dirname, bookpath + '.pdf'));
+                        try {
+                            require('fs').unlinkSync(path.join(__dirname, bookpath + '.pdf'));
+                        } catch (err) {
+                            res.json({ message: "error" });
+                            return;
+                        }
 
                         models.Report.deleteOne({ report_book_id: req.body.book_id }, function(err) {
                             if (err) {

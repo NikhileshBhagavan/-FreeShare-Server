@@ -68,7 +68,7 @@
         <div class="ui accordion">
             <% for(let i=0;i<obj.length;i++){ %>
 
-                <div class="ui segment <%=obj[i].report_book_id.substring(0,7) %>" style="position:relative;word-wrap:break-word;margin-top:5px;margin-bottom:5px;border-radius:0px;">
+                <div class="ui segment <%=obj[i].report_book_id.substring(0,9) %>" style="position:relative;word-wrap:break-word;margin-top:5px;margin-bottom:5px;border-radius:0px;">
 
                     <div class=" title">
                         <div style="width:82.5%">
@@ -159,7 +159,7 @@
                                     )
                                     .then(res => {
                                         if (res.data.message === "success") {
-                                            document.querySelector(".ui.segment." + document.querySelector(".disp").innerText.substring(10, 17)).style.display = "none";
+                                            document.querySelector(".ui.segment." + document.querySelector(".disp").innerText.substring(10, 19)).style.display = "none";
 
 
 
@@ -191,7 +191,7 @@
 
                                     ).then(res => {
                                         if (res.data.message === "success") {
-                                            document.querySelector(".ui.segment." + document.querySelector(".disp").innerText.substring(10, 17)).style.display = "none";
+                                            document.querySelector(".ui.segment." + document.querySelector(".disp").innerText.substring(10, 19)).style.display = "none";
 
 
                                             document.querySelector(".app").innerHTML = "<span>The book mentioned in the Subject of Email have been reported by you recently. It is found to have Unrelated/Plagiarized Content and therefore it is decided to Remove Book from the System</span>";
