@@ -327,29 +327,67 @@ app.post("/admin/report", function(req, res) {
                 list.push(rep.reported_emails[i]);
             }
             let bookname = rep.report_book_title;
-            models.Report.deleteOne({ report_book_id: req.body.book_id }, function(err) {
-                if (err) {
-                    res.json({ message: "error" });
-                } else {
-                    var transporter = nodemailer.createTransport({
-                        service: 'gmail',
-                        auth: {
-                            user: process.env.EMAIL,
-                            pass: process.env.PASSWORD
-                        }
-                    });
-                    var mailOptions = {
-                        from: process.env.EMAIL,
-                        to: list,
-                        subject: bookname + " Report Update",
-                        text: req.body.feedback
-                    };
-                    transporter.sendMail(mailOptions, function(e, info) {
-                        res.json({ message: "success" });
-                    });
+            let bookpath = rep.report_book_url.substring(1);
+            if (req.body.status === "reportapproved") {
+                models.Book.deleteOne({ uuid: req.body.book_id }, function(err) {
+                    if (err) {
+                        res.json({ message: "error" });
+                    } else {
+                        require('fs').unlinkSync(path.join(__dirname, bookpath + '.pdf'));
 
-                }
-            });
+                        models.Report.deleteOne({ report_book_id: req.body.book_id }, function(err) {
+                            if (err) {
+                                res.json({ message: "error" });
+                            } else {
+                                var transporter = nodemailer.createTransport({
+                                    service: 'gmail',
+                                    auth: {
+                                        user: process.env.EMAIL,
+                                        pass: process.env.PASSWORD
+                                    }
+                                });
+                                var mailOptions = {
+                                    from: process.env.EMAIL,
+                                    to: list,
+                                    subject: bookname + " Report Update",
+                                    text: req.body.feedback
+                                };
+                                transporter.sendMail(mailOptions, function(e, info) {
+                                    res.json({ message: "success" });
+                                });
+
+                            }
+                        });
+                    }
+                });
+            } else {
+                models.Report.deleteOne({ report_book_id: req.body.book_id }, function(err) {
+                    if (err) {
+                        res.json({ message: "error" });
+                    } else {
+                        var transporter = nodemailer.createTransport({
+                            service: 'gmail',
+                            auth: {
+                                user: process.env.EMAIL,
+                                pass: process.env.PASSWORD
+                            }
+                        });
+                        var mailOptions = {
+                            from: process.env.EMAIL,
+                            to: list,
+                            subject: bookname + " Report Update",
+                            text: req.body.feedback
+                        };
+                        transporter.sendMail(mailOptions, function(e, info) {
+                            res.json({ message: "success" });
+                        });
+
+                    }
+                });
+            }
+
+
+
         }
     });
 
