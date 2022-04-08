@@ -12845,7 +12845,7 @@
                                 })
                             },
                             className: "form-control adjust",
-                            style: { display: "inline-block", paddingLeft: "5px", paddingRight: "5px" },
+                            style: { display: "inline-block", paddingLeft: "15px", paddingRight: "5px" },
                             placeholder: "Search by any keyword"
                         }), " ", (0, q.jsx)("button", { className: "btn btn-primary", style: { position: "relative", right: "10px", bottom: "2px", height: "51px" }, children: (0, q.jsx)("i", { className: "search icon" }) }), !1 === k.isloaded ? (0, q.jsxs)(is, { children: [(0, q.jsx)(gi, { active: !0, inverted: !0, children: (0, q.jsx)(ls, { size: "large", children: "Loading" }) }), (0, q.jsx)(wi, { src: "https://react.semantic-ui.com/images/wireframe/paragraph.png" })] }) : (0, q.jsxs)("div", {
                             className: "row",
